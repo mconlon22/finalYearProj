@@ -10,6 +10,8 @@ from data import val
 from datetime import datetime
 from shapeFile import getLocName
 import json
+from sqlalchemy import desc
+
 from flask import jsonify
 import requests
 app = Flask(__name__)
@@ -20,7 +22,7 @@ cors = CORS(app)
 class CovidData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
    
-    date= db.Column(db.String(120), unique=True, nullable=False)
+    date= db.Column(db.DateTime, unique=True, nullable=False)
     totalPositive= db.Column(db.Integer(), unique=False, nullable=False)
     totalDeaths= db.Column(db.Integer(), unique=False, nullable=False)
     todaysCases= db.Column(db.Integer(), unique=False, nullable=False)
@@ -63,28 +65,26 @@ db.create_all()
 def index():
     covidData=getCovidDataObject()
     time.sleep(8.02)
-    object =CovidData(date=covidData["date"],totalPositive=covidData["totalPositive"],  totalDeaths=covidData["totalDeaths"],todaysCases= covidData["todaysCases"],todaysDeaths=covidData["todaysDeaths"],todaysIcu=covidData["todaysIcu"],casesInHospital=covidData["casesInHospital"],TestsLastWeek=covidData["TestsLastWeek"],PositiveRate=covidData["PositiveRate"], DateString= covidData["DateString"],firstDose=covidData["firstDose"],secondDose=covidData["secondDose"],total=covidData["total"])
+    date_obj = datetime.strptime(covidData["date"], '%d/%m/%Y')
+    object =CovidData(date=date_obj,totalPositive=covidData["totalPositive"],  totalDeaths=covidData["totalDeaths"],todaysCases= covidData["todaysCases"],todaysDeaths=covidData["todaysDeaths"],todaysIcu=covidData["todaysIcu"],casesInHospital=covidData["casesInHospital"],TestsLastWeek=covidData["TestsLastWeek"],PositiveRate=covidData["PositiveRate"], DateString= covidData["DateString"],firstDose=covidData["firstDose"],secondDose=covidData["secondDose"],total=covidData["total"])
     db.session.add(object)
     db.session.commit() 
     return covidData
 
 @app.route('/getCovid')
 def getTodays():
-    date=request.args["date"]
-    print(date)
-    try:
-        data = CovidData.query.filter(CovidData.date.order_by('date')).all()[0]
-    except:
-        data = CovidData.query.filter(CovidData.date.is_(date)).all()[0]
-    dataSchema = CovidDataSchema()
-    return dataSchema.dump(data)
+    entities = CovidData.query.order_by(desc(CovidData.date)).limit(3).all()
+
+
+    dataSchema = CovidDataSchema(many=True)
+    print(entities)
+    return jsonify(dataSchema.dump(entities))
 
 @app.route('/getLocalData')
 def getLocalData():
     lat=float(request.args["lat"])
     lon=float(request.args["lon"])
     userLocation=getLocName(lat,lon)
-    print(userLocation['ENGLISH'])
     data = AreaData.query.filter(AreaData.location.ilike(userLocation['ENGLISH'])).all()
     print(data)
     schema = CovidAreaSchema(many=True)
@@ -99,18 +99,10 @@ def jsonToSql():
         value=feature['attributes']['value']
         location=feature['attributes']['ENGLISH']
         date=datetime.strptime(feature['attributes']['EXPR_1'], '%Y-%m-%d')
-        try:
-            objects = AreaData.query.filter(and_(AreaData.location.ilike(location),AreaData.date.ilike(date))).all()
-            if len(objects)!= 0:
-                areaObject=AreaData(date=date,amount=value,location=location)
-            db.session.add(areaObject)
-        except:
-            continue
-
-
-        print(feature)
+        areaObject=AreaData(date=date,amount=value,location=location)
+        db.session.add(areaObject)
+        
     db.session.commit()
-jsonToSql()
 
 if __name__ == '__main__':
 

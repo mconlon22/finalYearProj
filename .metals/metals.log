@@ -12,3 +12,17 @@
 [0m2021.03.21 19:15:47 WARN  Build server is not auto-connectable.[0m
 [0m2021.03.21 19:15:47 WARN  no build tool detected in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. [0m
 [0m2021.03.21 21:39:32 INFO  shutting down Metals[0m
+[0m2021.03.23 16:22:07 INFO  Started: Metals version 0.10.0 in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp' for client vscode 1.54.3.[0m
+[0m2021.03.23 16:22:09 INFO  time: initialize in 1.27s[0m
+[0m2021.03.23 16:22:09 WARN  Build server is not auto-connectable.[0m
+[0m2021.03.23 16:22:09 WARN  no build tool detected in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. [0m
+[0m2021.03.23 16:40:52 INFO  shutting down Metals[0m
+[0m2021.03.24 12:16:16 INFO  Started: Metals version 0.10.0 in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp' for client vscode 1.54.3.[0m
+[0m2021.03.24 12:16:17 INFO  time: initialize in 1.39s[0m
+[0m2021.03.24 12:16:17 WARN  Build server is not auto-connectable.[0m
+[0m2021.03.24 12:16:17 WARN  no build tool detected in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. [0m
+[0m2021.03.24 13:52:46 INFO  shutting down Metals[0m
+[0m2021.03.24 17:37:32 INFO  Started: Metals version 0.10.0 in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp' for client vscode 1.54.3.[0m
+[0m2021.03.24 17:37:34 INFO  time: initialize in 1.85s[0m
+[0m2021.03.24 17:37:34 WARN  Build server is not auto-connectable.[0m
+[0m2021.03.24 17:37:34 WARN  no build tool detected in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. [0m
