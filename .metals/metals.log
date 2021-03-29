@@ -26,3 +26,12 @@
 [0m2021.03.24 17:37:34 INFO  time: initialize in 1.85s[0m
 [0m2021.03.24 17:37:34 WARN  Build server is not auto-connectable.[0m
 [0m2021.03.24 17:37:34 WARN  no build tool detected in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. [0m
+[0m2021.03.28 21:34:38 INFO  Started: Metals version 0.10.0 in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp' for client vscode 1.54.3.[0m
+[0m2021.03.28 21:34:39 INFO  time: initialize in 1.26s[0m
+[0m2021.03.28 21:34:43 WARN  Build server is not auto-connectable.[0m
+[0m2021.03.28 21:34:43 WARN  no build tool detected in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. [0m
+[0m2021.03.28 22:38:44 INFO  shutting down Metals[0m
+[0m2021.03.29 13:15:35 INFO  Started: Metals version 0.10.0 in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp' for client vscode 1.54.3.[0m
+[0m2021.03.29 13:15:37 INFO  time: initialize in 1.67s[0m
+[0m2021.03.29 13:15:37 WARN  Build server is not auto-connectable.[0m
+[0m2021.03.29 13:15:37 WARN  no build tool detected in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. [0m
