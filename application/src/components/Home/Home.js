@@ -12,7 +12,9 @@ import Graph from './Graph';
 import RiskGauge from './RiskGauge'
 export default class Home extends React.Component {
   state = {
-    covidData: []
+    covidData: [],
+    personalRisk:0,
+    locationRisk:0
   }
 
   componentDidMount() {
@@ -25,6 +27,7 @@ export default class Home extends React.Component {
                 this.setState({ covidData });
 
       })
+      
   }
   
 
@@ -52,7 +55,7 @@ export default class Home extends React.Component {
                         <Grid item sm={3} xs={0} spacing={1}  >
            </Grid>
             <Grid item xs={9} spacing={3} sm={9} >
-            <RiskGauge/>
+            <RiskGauge personalRisk={this.state.personalRisk} locationRisk={this.state.locationRisk}/>
            </Grid>
           
             <Grid item sm={12} xs={12} spacing={1}  >

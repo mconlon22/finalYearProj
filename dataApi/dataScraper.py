@@ -8,7 +8,7 @@ import requests
 
 
 def getCovidDataObject():
-    driver = webdriver.Chrome('D:/Downloads/chromedriver_win32 (4)/chromedriver')
+    driver = webdriver.Chrome('/Users/martinconlon/Downloads/chromedriver6')
     driver.get("https://covid19ireland-geohive.hub.arcgis.com/")
     time.sleep(8)
     html = driver.page_source

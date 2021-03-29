@@ -4,53 +4,53 @@ import Paper from '@material-ui/core/Paper';
 import axios from 'axios';
 import Chart from "react-google-charts";
 import Component from "react-google-charts";
+import { Button } from '@material-ui/core';
+
+import {withRouter} from 'react-router-dom';
 
 
-
-
-
-export default class Graph extends React.Component {
- state = { areaData : [] ,position:null,  memory: 0,
-    cpu: 55,
-    network: 0,
-    intervalID: null,};
-    
-
+function handleClick() {
   
-      componentDidMount() {
-        var position=[]
-         navigator.geolocation.getCurrentPosition((position)=> {
-    
-      position=position
+}
 
 
+class Graph extends React.Component {
+ state = { personalRisk:0,locationRisk:0};
 
-    axios.get(`http://127.0.0.1:5000/getLocalData?lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
-      .then(res => {
-        var data = res.data;
-        console.log(areaData)
-        var areaData=[]
-        for (var i=0; i<data.length-1; i++){
-            areaData.push([new Date(data[i].date),data[i].amount])
-        }
-        areaData.sort((a,b)=>a[0].getTime()-b[0].getTime());
-      for (var i=0; i<data.length-1; i++){
-            areaData[i][0]=areaData[i][0].toISOString().slice(5,10).replace('-','/')
-        }
-        areaData.location=data[0].location
-        areaData.unshift(['Date','Cases per 100k'])
-        this.setState({ areaData });
-
-    });
-      })
+ 
+ componentDidMount() {
+   var position=[]
+    navigator.geolocation.getCurrentPosition((position)=> {
+ position=position
+ })
+ }
+ 
+ render() {
+      handleClick=() => {
+        console.log('working')
+        this.props.history.push('/Calculator') 
       }
-    render() {
-      const options = {
- title: `Cases In ${this.state.areaData.location}`,
-   curveType: "function",
-  legend: { position: "bottom" }
-};
+        
+      
+  console.log(window.localStorage.getItem('userRisk'))
+this.state.locationRisk=window.localStorage.getItem("locationRisk")!=null?this.state.locationRisk=Number(window.localStorage.getItem("locationRisk")):this.state.locationRisk=0
+this.state.personalRisk=window.localStorage.getItem("userRisk")!=null?this.state.personalRisk=Number(window.localStorage.getItem("userRisk")):this.state.personalRisk=0
+
+const locationRisk=this.state.locationRisk
+const personalRisk=this.state.personalRisk
+if(personalRisk!=null&&locationRisk!=null){
+  console.log('big fat cock')
+  this.state.total= locationRisk+personalRisk/2
+}
+else{
+  this.state.total=0
+}
+const total=this.state.total
+
+console.log(typeof Number(locationRisk),typeof Number(personalRisk),typeof total)
+
         return (
+<div>
 
 
       <Chart
@@ -60,12 +60,9 @@ export default class Graph extends React.Component {
         loader={<div>Loading Chart</div>}
         data={[
           ['Label', 'Value'],
-          ['Personal', this.state.memory],
-          ['Location', this.state.memory],
-          ['Total', this.state.memory],
-
-
-         
+          ['Personal', personalRisk],
+          ['Location', locationRisk],
+          ['Total', total]
         ]}
         options={{
           majorTicks:1,
@@ -80,8 +77,11 @@ export default class Graph extends React.Component {
         }}
         rootProps={{ 'data-testid': '1' }}
       />
-    
+                {personalRisk == null?<Button variant="contained" color="primary" onClick={handleClick}>Calculate Personal Risk</Button>:<div></div>}
+
+    </div>
   
   )
   }
 }
+export default withRouter(Graph)

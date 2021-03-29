@@ -7,6 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import axios from 'axios';
 
 import Typography from '@material-ui/core/Typography';
 
@@ -15,6 +16,8 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import { useHistory } from "react-router-dom";
+
 import {Redirect} from 'react-router-dom'
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -31,8 +34,30 @@ const useStyles = makeStyles((theme) => ({
 
   },
 }));
+
 const Calculator=()=>{
-     const classes = useStyles();
+  const history = useHistory();
+
+  function getRisk(){
+      const params={
+        age: age,
+        height:height,
+        weight:weight,
+        smoking:smoking,
+        ethnicity: ethnicity,
+        sex:sex
+      }
+      axios.post(`http://127.0.0.1:85/userRisk`, null, { params:params})
+      .then(res => {
+        console.log(res.data)
+       window.localStorage.setItem("userRisk",Math.round(res.data*10)/10)
+       history.push("/");
+
+      })
+    
+  
+  }
+  const classes = useStyles();
   const [age, setAge] = React.useState('');
     const [redirect, setRedirect] = React.useState(false);
 
@@ -41,14 +66,11 @@ const Calculator=()=>{
   const [weight, setWeight] = React.useState('');
   const [smoking, setSmoking] = React.useState('');
   const [ethnicity, setEthnicity] = React.useState('');
-
-
+  
   const handleAge = (event) => {
     setAge(event.target.value);
   };
-  const calculateRisk = (event) => {
-      setRedirect(true)
-  };
+
   const handleSex = (event) => {
     setSex(event.target.value);
   };
@@ -207,7 +229,7 @@ const Calculator=()=>{
         </Select>
       </FormControl>
       <Grid item xs={12}>
-<Button   className={classes.button} variant="contained" color="primary" onClick={calculateRisk} disableElevation>
+<Button   className={classes.button} variant="contained" color="primary" onClick={getRisk} disableElevation>
   Calculate Risk
 </Button>
         </Grid>

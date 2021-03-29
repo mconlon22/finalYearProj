@@ -8,8 +8,11 @@ import Routing from "./RoutingMachine";
 import MapInfo from "./MapInfo";
 import * as ELG from "esri-leaflet-geocoder";
 import Grid from '@material-ui/core/Grid';
-
+import "leaflet-control-geocoder/dist/Control.Geocoder.css";
+import "leaflet-control-geocoder/dist/Control.Geocoder.js";
 import L from "leaflet";
+import LeafletControlGeocoder from "./LeafletControlGeocoder";
+
 
 const max=2000
 const min=getMin()
@@ -119,12 +122,18 @@ const fillBlueOptions = { fillColor: 'blue' }
       lon: position.coords.longitude
     });
     });
-    const map = this.map.leafletElement && map.current.leafletElement.getBounds();;
-  
+    
+    const map = this.map
+    var geocoder = L.Control.Geocoder.nominatim();
+
     if(map!=null){
      const searchControl = new ELG.Geosearch().addTo(this.map);
     const results = new L.LayerGroup().addTo(this.map);
-    
+    var control = L.Control.geocoder({
+      query: 'Moon',
+      placeholder: 'Search here...',
+      geocoder: geocoder
+    }).addTo(map);
     searchControl.on("results", function(data) {
       results.clearLayers();
       for (let i = data.results.length - 1; i >= 0; i--) {

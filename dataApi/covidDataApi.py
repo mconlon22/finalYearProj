@@ -8,7 +8,7 @@ from flask_marshmallow import Marshmallow
 from flask_cors import CORS
 from data import val
 from datetime import datetime
-from shapeFile import getLocName
+from shape import getLocName
 import json
 from sqlalchemy import desc
 
@@ -85,10 +85,24 @@ def getLocalData():
     lat=float(request.args["lat"])
     lon=float(request.args["lon"])
     userLocation=getLocName(lat,lon)
+    print(userLocation)
     data = AreaData.query.filter(AreaData.location.ilike(userLocation['ENGLISH'])).all()
     print(data)
     schema = CovidAreaSchema(many=True)
     print(schema.dump(data))
+    return jsonify(schema.dump(data))
+
+@app.route('/getLocalRisk')
+def getLocalRisk():
+    lat=float(request.args["lat"])
+    lon=float(request.args["lon"])
+    userLocation=getLocName(lat,lon)
+    print(userLocation)
+    data = AreaData.query.filter(AreaData.location.ilike(userLocation['ENGLISH'])).limit(1).all()
+    print('data')
+
+    print(data)
+    schema = CovidAreaSchema(many=True)
     return jsonify(schema.dump(data))
     
 def jsonToSql():

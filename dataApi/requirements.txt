@@ -1,0 +1,8 @@
+selenium
+flask_sqlalchemy
+flask_marshmallow
+pyshp
+flask
+flask_cors
+bs4
+shapely

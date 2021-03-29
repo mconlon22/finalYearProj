@@ -34,9 +34,14 @@ export default class Graph extends React.Component {
         }
         areaData.location=data[0].location
         areaData.unshift(['Date','Cases per 100k'])
+        console.log(areaData[areaData.length-1][1])
+        window.localStorage.setItem('locationRisk',Math.round((areaData[areaData.length-1][1]/200)*10)/10)
+        console.log(window.localStorage.getItem('locationRisk'))
         this.setState({ areaData });
 
     });
+    
+
       })
       }
     render() {

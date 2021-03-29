@@ -21,6 +21,9 @@ function App() {
     <div className="App">
       <Router>
       <NavBar/>
+      <br/>
+      <br/>
+
         {routeComponents}
       </Router>
 

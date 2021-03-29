@@ -25,6 +25,7 @@ class RiskCalc:
             return 8630403/RiskCalc.totalPeople,6162/RiskCalc.totalDeaths
     def getBmiRisk(self):
         bmi = self.user.weight/(self.user.height*self.user.height)
+        print(bmi)
         if bmi <= 18.5:
             return 310721/RiskCalc.totalPeople,522/RiskCalc.totalDeaths
 
@@ -49,15 +50,6 @@ class RiskCalc:
 
         elif self.user.smoking=='current' :
             return 2941764/RiskCalc.totalPeople,708/RiskCalc.totalDeaths
-    def getSmokingRisk(self):
-        if self.user.smoking == 'never':
-            return 7924739/RiskCalc.totalPeople,3598/RiskCalc.totalDeaths
-
-        elif self.user.smoking =='former':
-            return 5690966/RiskCalc.totalPeople,6531/RiskCalc.totalDeaths
-
-        elif self.user.smoking=='current' :
-            return 2941764/RiskCalc.totalPeople,708/RiskCalc.totalDeaths
     def getEthnicityRisk(self):
         if self.user.ethnicity=='white':
             return 10866411/RiskCalc.totalPeople,7119/RiskCalc.totalDeaths
@@ -73,14 +65,11 @@ class RiskCalc:
     def getRisk(self):
         numInGroup,numDied=self.getAgeRisk()
         sexGroupMult,sexDiedMult=self.getSexRisk()
-       
-
-
         bmiGroupMult,bmiDiedMult=self.getBmiRisk()
         smokingGroupMult,smokingDiedMult=self.getSmokingRisk()
         ethnicityGroupMult,ethnicityDiedMult=self.getEthnicityRisk()
         totalRisk=(numDied*sexDiedMult*bmiDiedMult*smokingDiedMult*ethnicityDiedMult)/(numInGroup*sexGroupMult*bmiGroupMult*smokingGroupMult*ethnicityGroupMult)
-        return totalRisk
+        return (totalRisk/28)*5
 
 
 
@@ -95,7 +84,7 @@ class User:
     def __init__(self,age,sex,height,weight,smoking,ethnicity):
         self.age=age
         self.sex=sex
-        self.height=height
+        self.height=height/100
         self.weight=weight
         self.smoking=smoking
         self.ethnicity=ethnicity
