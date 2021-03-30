@@ -39,7 +39,6 @@ this.state.personalRisk=window.localStorage.getItem("userRisk")!=null?this.state
 const locationRisk=this.state.locationRisk
 const personalRisk=this.state.personalRisk
 if(personalRisk!=null&&locationRisk!=null){
-  console.log('big fat cock')
   this.state.total= locationRisk+personalRisk/2
 }
 else{
@@ -77,7 +76,7 @@ console.log(typeof Number(locationRisk),typeof Number(personalRisk),typeof total
         }}
         rootProps={{ 'data-testid': '1' }}
       />
-                {personalRisk == null?<Button variant="contained" color="primary" onClick={handleClick}>Calculate Personal Risk</Button>:<div></div>}
+                {personalRisk == 0?<Button variant="contained" color="primary" onClick={handleClick}>Calculate Personal Risk</Button>:<div></div>}
 
     </div>
   

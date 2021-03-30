@@ -12,7 +12,10 @@ import "leaflet-control-geocoder/dist/Control.Geocoder.css";
 import "leaflet-control-geocoder/dist/Control.Geocoder.js";
 import L from "leaflet";
 import LeafletControlGeocoder from "./LeafletControlGeocoder";
-
+import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import Typography from '@material-ui/core/Typography';
+import { geocodeByAddress, getLatLng } from 'react-google-places-autocomplete';
+ 
 
 const max=2000
 const min=getMin()
@@ -106,11 +109,41 @@ const fillBlueOptions = { fillColor: 'blue' }
 
     class LeafletMap extends Component {
         state={
-             lat: null,
-      lng: null,
       zoom: 7,
-      isMapInit: false
+      isMapInit: false,
+      from:{lat:53.30001,lng:-6.1778},
+      to:{lat:53.30002,lng:-6.1778}
         }
+        setAddressTo=(value) =>{
+          console.log(value);
+          this.state.value = value;
+          geocodeByAddress(value.label)
+        .then(results => getLatLng(results[0]))
+        .then(({ lat, lng }) =>{
+                    console.log('to')
+
+                    if(lat!=null&&lng!=null){
+
+                this.setState({to: {lat: lat, lng: lng}})
+                console.log(this.state.to)
+                    }
+        })
+        }
+         setAddressFrom=(value) =>{
+        console.log(value);
+          this.state.value = value;
+          geocodeByAddress(value.label)
+        .then(results => getLatLng(results[0]))
+        .then(({ lat, lng }) =>{
+          console.log('from')
+          if(lat!=null&&lng!=null){
+                this.setState({from: {lat: lat, lng: lng}})
+                  console.log(typeof lat)
+
+          }
+        })
+        }
+
        
    
      componentDidMount() {
@@ -124,22 +157,8 @@ const fillBlueOptions = { fillColor: 'blue' }
     });
     
     const map = this.map
-    var geocoder = L.Control.Geocoder.nominatim();
 
-    if(map!=null){
-     const searchControl = new ELG.Geosearch().addTo(this.map);
-    const results = new L.LayerGroup().addTo(this.map);
-    var control = L.Control.geocoder({
-      query: 'Moon',
-      placeholder: 'Search here...',
-      geocoder: geocoder
-    }).addTo(map);
-    searchControl.on("results", function(data) {
-      results.clearLayers();
-      for (let i = data.results.length - 1; i >= 0; i--) {
-        results.addLayer(L.marker(data.results[i].latlng));
-      }
-    });}
+   
   }
     saveMap = map => {
     this.map = map;
@@ -153,30 +172,48 @@ render(){
   if(this.map!=null){
      
   }
+  
 
   
 
     return (
       <div>
               <br />
-                            <br />
-              
+                       
+
               
               <Grid container spacing={1}>
 
             <Grid item sm={3} xs={12} spacing={1}  >
       </Grid>
             <Grid item sm={9} xs={12} spacing={1}  >
+             <Grid item sm={2} xs={12} spacing={1}  >
+            <Typography variant="h6" component="h2" justify="flex-end">From</Typography>
+      </Grid>
 
-        <Map className='map' center={[53.305, -7.177]} zoom={8} ref={this.saveMap} scrollWheelZoom={true} ref={m => {
-          this.leafletMap = m;
-        }}>
+                      <GooglePlacesAutocomplete apiKey="AIzaSyDp3YVDuLumOSd_jdEUxeDkN4g1fkWR9Vk" selectProps={{
+    
+          onChange: this.setAddressFrom,
+        }}/>
+                       <Grid item sm={2} xs={12} spacing={1}  >
+            <Typography variant="h6" component="h2" justify="flex-end">To</Typography>
+      </Grid>
+
+                      <GooglePlacesAutocomplete apiKey="AIzaSyDp3YVDuLumOSd_jdEUxeDkN4g1fkWR9Vk" selectProps={{
+    
+          onChange: this.setAddressTo,
+        }}
+ />
+                            <br />
+                           
+
+        <Map className='map' center={[53.305, -7.177]} zoom={8} ref={this.saveMap} scrollWheelZoom={true} >
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {this.state.isMapInit && <Routing map={this.map} />}
+        {this.state.isMapInit && <Routing map={this.map} from={this.state.from} to={this.state.to} />}
 
         <Circle center={this.state.lat!=null?[this.state.lat, this.state.lon]:[53.305, -7.177]} pathOptions={fillBlueOptions} radius={5000} />
 

@@ -10,6 +10,9 @@ import Button from '@material-ui/core/Button';
 import { Chart } from 'react-charts'
 import Graph from './Graph';
 import RiskGauge from './RiskGauge'
+        import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+
+
 export default class Home extends React.Component {
   state = {
     covidData: [],
@@ -51,6 +54,7 @@ export default class Home extends React.Component {
     return (
       <div>
         <br/>
+
             <Grid container spacing={1}>
                         <Grid item sm={3} xs={0} spacing={1}  >
            </Grid>
