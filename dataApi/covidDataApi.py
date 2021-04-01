@@ -9,6 +9,8 @@ from flask_cors import CORS
 from data import val
 from datetime import datetime
 from shape import getLocName
+from shape import getLocNames
+
 import json
 from sqlalchemy import desc
 
@@ -91,6 +93,27 @@ def getLocalData():
     schema = CovidAreaSchema(many=True)
     print(schema.dump(data))
     return jsonify(schema.dump(data))
+@app.route('/getRoute')
+def getRouteLocations():
+    locations=request.args.getlist('locations[]')
+    print(locations)
+    jsonlocations=[]
+    for location in locations: jsonlocations.append(json.loads(location))
+    userLocations=getLocNames(jsonlocations)
+
+    print(userLocations)
+    locations=[]
+    for location in userLocations:
+        if not isinstance(location, str):
+            print('location[0]')
+            print(location)
+            locations.append(AreaData.query.filter(AreaData.location.ilike(location['ENGLISH'])).order_by(desc('date')).limit(1).all()[0])
+    print('data')
+
+    print(locations)
+    schema = CovidAreaSchema(many=True)
+
+    return jsonify(schema.dump(locations))
 
 @app.route('/getLocalRisk')
 def getLocalRisk():

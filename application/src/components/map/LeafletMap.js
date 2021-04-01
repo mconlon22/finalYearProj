@@ -1,9 +1,8 @@
 
 
 import React,{ Component } from 'react'
-import {Map,TileLayer,Popup,Marker,GeoJSON ,Circle} from 'react-leaflet'
+import {Map,TileLayer,Popup,Marker,GeoJSON ,Circle,Polyline} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
-import data from './Covid19_LEACases_Mapped.json'
 import Routing from "./RoutingMachine";
 import MapInfo from "./MapInfo";
 import * as ELG from "esri-leaflet-geocoder";
@@ -15,11 +14,14 @@ import LeafletControlGeocoder from "./LeafletControlGeocoder";
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import Typography from '@material-ui/core/Typography';
 import { geocodeByAddress, getLatLng } from 'react-google-places-autocomplete';
- 
+import axios from 'axios'
 
-const max=2000
-const min=getMin()
-const range=max-min
+
+var data=null
+var loaded=false
+function getData(){
+ 
+}
 function getMax() {
     var max=0
 
@@ -42,22 +44,25 @@ function getMin() {
     return min;
 }
 function getPercent(num){
-    var range=max-min
+  const max=getMax()
+  const min=getMin()
+  const range=max-min
 
     var x=((num-min)/range)*100
     if(num>max){x=100}
     return x
 }
-const getGeoJSONComponent=() =>{
-
-    return(
-        <GeoJSON
-        data={data}
-        color='red'
-        fillColor='green'
-        weight={1}
-        onEachFeature={onEachFeature} />
-        );
+function getGeoJSONComponent (){
+ 
+  return(
+    <GeoJSON
+    data={data}
+    color='red'
+    fillColor='green'
+    weight={1}
+    onEachFeature={onEachFeature} />
+    );
+    
     }
     var percentColors = [
         { pct: 0.0, color: { r: 0xff, g: 0x00, b: 0 } },
@@ -105,41 +110,98 @@ function onEachFeature(feature, layer) {
 `);
     
 }
+
+const from={
+  lat:53.3069845,lng:-6.206675120805812
+}
+const to={
+  lat:53.3018309,lng:-6.179926367800741
+}
 const fillBlueOptions = { fillColor: 'blue' }
 
-    class LeafletMap extends Component {
-        state={
-      zoom: 7,
-      isMapInit: false,
-      from:{lat:53.30001,lng:-6.1778},
-      to:{lat:53.30002,lng:-6.1778}
-        }
+class LeafletMap extends Component {
+  state={
+    zoom: 7,
+    isMapInit: false,
+    from:{lat:null,lng:null},
+    to:{lat:null,lng:null},
+    routeData:null
+  }
+  getRoutingData=()=>{
+    var params={params:{
+      apiKey:'ZnK8043eZs4uDqFYiaDhunX4w9K_vG-U1f9KKYSvEoc',
+      waypoint0:'geo!'+this.state.from.lat.toString()+','+this.state.from.lng.toString(),
+      waypoint1:'geo!'+this.state.to.lat.toString()+','+this.state.to.lng.toString(),
+      mode:'fastest;car;traffic:disabled',
+      avoidareas:'',
+      return: 'polyline'
+  }
+    }
+    var routeData=[]
+    var routeLocationData=[]
+    axios.get("https://route.ls.hereapi.com/routing/7.2/calculateroute.json?",params)
+    .then((res)=>{
+    var response=res.data.response.route[0].leg[0].maneuver
+    for(var x=0;x<response.length-1;x++){
+      const val=response[x].position
+      console.log(val)
+      routeLocationData.push({lat:val.latitude,lon:val.longitude})
+      
+    }
+    console.log(routeLocationData)
+   for(var i=1;i<response.length-1;i++){
+     const from=response[i-1].position
+     const to=response[i].position
+    
+      routeData.push({
+        from_lat: from.latitude,
+        from_long:from.longitude,
+        id: to.id,
+        to_lat: to.latitude,
+        to_long: to.longitude,
+      })
+    }
+    params={
+      params:{
+        locations:routeLocationData
+        }}
+    axios.get(`http://127.0.0.1:5000/getRoute`,params)
+      .then(res => {
+        console.log(res.data)
+  
+      })
+    console.log(routeData)
+    this.setState({routeData})
+      
+    })
+    
+  
+  }
         setAddressTo=(value) =>{
-          console.log(value);
-          this.state.value = value;
           geocodeByAddress(value.label)
         .then(results => getLatLng(results[0]))
         .then(({ lat, lng }) =>{
-                    console.log('to')
 
                     if(lat!=null&&lng!=null){
 
-                this.setState({to: {lat: lat, lng: lng}})
-                console.log(this.state.to)
+                this.setState({to: {lat: lat, lng: lng}},() => {
+                  if(this.state.from.lat!=null){
+                    this.getRoutingData()
+                  }
+                })
                     }
         })
         }
          setAddressFrom=(value) =>{
-        console.log(value);
-          this.state.value = value;
           geocodeByAddress(value.label)
         .then(results => getLatLng(results[0]))
         .then(({ lat, lng }) =>{
-          console.log('from')
           if(lat!=null&&lng!=null){
-                this.setState({from: {lat: lat, lng: lng}})
-                  console.log(typeof lat)
-
+                this.setState({from: {lat: lat, lng: lng}},() => {
+                  if(this.state.to.lat!=null){
+                    this.getRoutingData()
+                  }
+                })
           }
         })
         }
@@ -147,7 +209,10 @@ const fillBlueOptions = { fillColor: 'blue' }
        
    
      componentDidMount() {
-         
+      axios.get("https://opendata.arcgis.com/datasets/27d401c9ae084097bb1f3a69b69462a1_0.geojson").then((res)=>{
+        data=res.data
+        loaded=true
+      })
     navigator.geolocation.getCurrentPosition((position) =>{
      
       this.setState({
@@ -159,7 +224,11 @@ const fillBlueOptions = { fillColor: 'blue' }
     const map = this.map
 
    
+  
+
+   
   }
+  
     saveMap = map => {
     this.map = map;
     this.setState({
@@ -213,13 +282,19 @@ render(){
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {this.state.isMapInit && <Routing map={this.map} from={this.state.from} to={this.state.to} />}
+        {this.state.isMapInit && this.state.to.lng && <Routing map={this.map} from={this.state.from} to={this.state.to} />}
 
         <Circle center={this.state.lat!=null?[this.state.lat, this.state.lon]:[53.305, -7.177]} pathOptions={fillBlueOptions} radius={5000} />
 
 
 
-        {getGeoJSONComponent()}        
+        {loaded?getGeoJSONComponent():<div></div>}   
+        {this.state.from.lat!=null&&this.state.to.lat!=null&&this.state.routeData!=null?
+        this.state.routeData.map(({id, from_lat, from_long, to_lat, to_long}) => {
+          return <Polyline key={id} positions={[
+            [from_lat, from_long], [to_lat, to_long],
+          ]} color={'blue'} />
+          }):<div></div>}     
       </Map>
             </Grid>
 

@@ -1,0 +1,1 @@
+https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/Covid19_LEACases_Mapped_Historic_Records/FeatureServer/0/query?f=json&where=ENGLISH%3D%20LEA-6%27&returnGeometry=false&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CP14_100k%2CEventDate%2CENGLISH&orderByFields=EventDate%20asc&resultOffset=0&resultRecordCount=4000&resultType=standard&cacheHint=true

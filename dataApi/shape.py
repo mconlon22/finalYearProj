@@ -1,6 +1,8 @@
 import shapefile
 from shapely.geometry import shape, Point
 
+r = shapefile.Reader("./shapefiles/Covid19_LEACases_Mapped.shp")
+
 def getLocName(lat,lon):
     def check(polygon,lon, lat):
         # build a shapely point from your geopoint
@@ -10,7 +12,6 @@ def getLocName(lat,lon):
         return polygon.contains(point)
         
     # read your shapefile
-    r = shapefile.Reader("./shapefiles/Covid19_LEACases_Mapped.shp")
 
     # get the shapes
     shapes = r.shapes()
@@ -27,4 +28,9 @@ def getLocName(lat,lon):
             print('hello') 
             return dict(zip(field_names, r.shapeRecords()[i].record)) 
     return 'not found'
-
+def getLocNames(locations):
+    names=[]
+    for location in locations:
+        names.append(getLocName(location['lat'],location['lon']))
+    print(names)
+    return names

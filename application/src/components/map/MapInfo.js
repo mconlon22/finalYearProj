@@ -17,6 +17,7 @@ class MapInfo extends MapControl {
     dir.route({
       locations: ["Hyderabad", "Tirupati", "Chennai"]
     });
+    console.log(dir)
     return () =>
       window.MQ.routing.routeLayer({
         directions: dir,
