@@ -4,7 +4,6 @@ import React,{ Component } from 'react'
 import {Map,TileLayer,Popup,Marker,GeoJSON ,Circle,Polyline} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import Routing from "./RoutingMachine";
-import MapInfo from "./MapInfo";
 import * as ELG from "esri-leaflet-geocoder";
 import Grid from '@material-ui/core/Grid';
 import "leaflet-control-geocoder/dist/Control.Geocoder.css";
@@ -15,6 +14,17 @@ import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import Typography from '@material-ui/core/Typography';
 import { geocodeByAddress, getLatLng } from 'react-google-places-autocomplete';
 import axios from 'axios'
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Button from '@material-ui/core/Button';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 
 
 var data=null
@@ -125,11 +135,12 @@ class LeafletMap extends Component {
     isMapInit: false,
     from:{lat:null,lng:null},
     to:{lat:null,lng:null},
-    routeData:null
+    routeData:null,
+    routeCovidData:null
   }
   getRoutingData=()=>{
     var params={params:{
-      apiKey:'ZnK8043eZs4uDqFYiaDhunX4w9K_vG-U1f9KKYSvEoc',
+      apiKey:'z_s-RkrD1pso_3asPKR-ZTJuSBe7bQhjqp46h-VDmQ0',
       waypoint0:'geo!'+this.state.from.lat.toString()+','+this.state.from.lng.toString(),
       waypoint1:'geo!'+this.state.to.lat.toString()+','+this.state.to.lng.toString(),
       mode:'fastest;car;traffic:disabled',
@@ -168,6 +179,7 @@ class LeafletMap extends Component {
     axios.get(`http://127.0.0.1:5000/getRoute`,params)
       .then(res => {
         console.log(res.data)
+        this.setState({routeCovidData:res.data})
   
       })
     console.log(routeData)
@@ -254,6 +266,42 @@ render(){
               <Grid container spacing={1}>
 
             <Grid item sm={3} xs={12} spacing={1}  >
+            <Card> 
+                  <CardContent>
+                            <Typography>
+                            This Route Passes Through
+          </Typography>
+          <TableContainer component={Paper}>
+      <Table  aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Location</TableCell>
+            <TableCell align="right">Covid Level Per 100k</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+
+
+
+       </TableBody>
+      </Table>
+    </TableContainer>
+      {this.state.routeCovidData!=null?this.state.routeCovidData.map((data)=>{
+        return (
+          <TableRow key={data.location}>
+              <TableCell component="th" scope="row">
+                {data.location}
+              </TableCell>
+              <TableCell align="right">{data.amount}</TableCell>
+          
+            </TableRow>
+        )
+      }):<div></div>
+
+      }
+
+      </CardContent>
+            </Card>
       </Grid>
             <Grid item sm={9} xs={12} spacing={1}  >
              <Grid item sm={2} xs={12} spacing={1}  >
@@ -282,7 +330,6 @@ render(){
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {this.state.isMapInit && this.state.to.lng && <Routing map={this.map} from={this.state.from} to={this.state.to} />}
 
         <Circle center={this.state.lat!=null?[this.state.lat, this.state.lon]:[53.305, -7.177]} pathOptions={fillBlueOptions} radius={5000} />
 
