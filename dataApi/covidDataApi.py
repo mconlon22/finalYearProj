@@ -110,7 +110,7 @@ def getRouteLocations():
 
     print(locations)
     schema = CovidAreaSchema(many=True)
-
+    
     return jsonify(schema.dump(locations))
 
 @app.route('/getLocalRisk')
