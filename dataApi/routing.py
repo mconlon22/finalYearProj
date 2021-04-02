@@ -2,7 +2,7 @@ import requests
 import json
 import logging
 from shape import getLocNames 
-
+from shape import getBoudingBox
 
 class Router:
     fromLoc=0
@@ -30,7 +30,7 @@ class Router:
             return maxLocation
     def getRoutes(self):
         payload={
-      'apiKey':'SiWUDyO4ubARr4VTNEnbCEZOE-MNxi8vPcSJa5lZ3x0',
+      'apiKey':'Qlda5wHYI6BmZkVSB8V2LSvXzHZzY85-4aT2uoNH7aU',
       'waypoint0':'geo!'+str(self.fromLoc['lat'])+','+str(self.fromLoc['lng']),
       'waypoint1':'geo!'+str(self.toLoc['lat'])+','+str(self.toLoc['lng']),
       'mode':'fastest;car;traffic:disabled',
@@ -47,8 +47,23 @@ class Router:
             del location['position']
         locationObjects=getLocNames(locations)
         average=self.getAverageCovid(locationObjects)
-        print(self.getMaxCovid(locationObjects[1:len(locationObjects)-1]))
+        self.getRoutesBbox(locationObjects)
 
-   
+    def getRoutesBbox(self,locationObjects):
+            avoidareas=''
+            maxCovid=self.getMaxCovid(locationObjects[1:len(locationObjects)-1])
+            boundingBox=getBoudingBox()
+            print('maxCovid')
+
+            print(maxCovid)
+            
+           
+    
+
+
+
+
+
+
 
      

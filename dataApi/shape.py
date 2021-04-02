@@ -24,7 +24,6 @@ def getLocName(lat,lon):
     fields = r.fields[1:] 
     field_names = [field[0] for field in fields]
     for i,val in enumerate(shapes):
-        print(val.bbox)
         polygon = shape(val)
         if check(polygon,lon,lat):
             return dict(zip(field_names, r.shapeRecords()[i].record)) 
@@ -43,14 +42,11 @@ def getRect():
     with open(path) as f:
         gj = json.load(f)
     features = gj['features'][0]
-    print(features)
 
 def getBoudingBox(locationName):
     for i,record in enumerate(r.shapeRecords()):
         if record.record['ENGLISH']==locationName:
             bbox = r.shapes()[i].bbox
-            print(bbox)
             return bbox
 
-getBoudingBox('BLACKROCK LEA-6')
 
