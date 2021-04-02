@@ -100,12 +100,10 @@ def getRouteLocations():
     jsonlocations=[]
     for location in locations: jsonlocations.append(json.loads(location))
     userLocations=getLocNames(jsonlocations)
-
     print(userLocations)
     locations=[]
     for location in userLocations:
         if not isinstance(location, str):
-            print('location[0]')
             print(location)
             locations.append(AreaData.query.filter(AreaData.location.ilike(location['ENGLISH'])).order_by(desc('date')).limit(1).all()[0])
     print('data')
