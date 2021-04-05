@@ -55,10 +55,13 @@ export default class Home extends React.Component {
       <div>
         <br/>
 
+                  <Typography variant="h6" component="h2" >Your Risk Levels</Typography>
             <Grid container spacing={1}>
-                        <Grid item sm={3} xs={0} spacing={1}  >
+                        <Grid item sm={5} xs={0} spacing={1}  >
            </Grid>
-            <Grid item xs={9} spacing={3} sm={9} >
+
+            <Grid item xs={9} spacing={5} sm={7} >
+
             <RiskGauge personalRisk={this.state.personalRisk} locationRisk={this.state.locationRisk}/>
            </Grid>
           
@@ -87,9 +90,7 @@ export default class Home extends React.Component {
             <Grid item xs={3} spacing={1} sm={2} >
            </Grid>
            <Grid item xs={12} spacing={1} sm={10}>
-          <Button variant="contained" color="primary" href="#contained-buttons">
-            View All Time Data
-          </Button>  
+          
          
           </Grid>
            <Grid item xs={3} spacing={1} sm={3} >
@@ -97,9 +98,7 @@ export default class Home extends React.Component {
                      <Grid item xs={12} spacing={1} sm={9}  >
 
                           <Graph style={section}/>
-                          <Button variant="contained" color="primary" href="#contained-buttons">
-                          View Covid Near Me
-                        </Button>  
+                         
 
                                </Grid>
 

@@ -15,17 +15,18 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MapIcon from '@material-ui/icons/Map';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import MailIcon from '@material-ui/icons/Mail';
+import HomeIcon from '@material-ui/icons/Home';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Routes from './Routes';
 import { useHistory } from "react-router-dom";
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import FunctionsIcon from '@material-ui/icons/Functions';
 const drawerWidth = 250;
 
 const useStyles = makeStyles((theme) => ({
@@ -116,7 +117,10 @@ export default function NavBar(props) {
       <List>
         {Routes.map((route, index) => (
           <ListItem button key={route.sidebarName}  onClick={() => handleClick(route.path)}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+            {index  === 0 ?<ListItemIcon> <HomeIcon/></ListItemIcon> :null}
+                       {index  === 1 ?  <ListItemIcon><MapIcon/> </ListItemIcon>:null}
+            {index  === 2 ?<ListItemIcon> <FunctionsIcon/> </ListItemIcon>:null}
+
             <ListItemText primary={route.sidebarName} />
           </ListItem>
         ))}
@@ -150,37 +154,7 @@ export default function NavBar(props) {
             <MenuIcon />
           </IconButton>
        
-          {auth && (
-            <div>
-              <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={open}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>Profile</MenuItem>
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-              </Menu>
-            </div>
-          )}
+          
         </Toolbar>
       </AppBar>
         <nav className={classes.drawer} aria-label="mailbox folders">

@@ -322,6 +322,10 @@ render(){
         }}
  />
                             <br />
+                                                        <br />
+                            <br />
+                            <br />
+
                            
 
         <Map className='map' center={[53.305, -7.177]} zoom={8} ref={this.saveMap} scrollWheelZoom={true} >
