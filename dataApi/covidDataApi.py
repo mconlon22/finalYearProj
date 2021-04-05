@@ -157,7 +157,8 @@ def getSafestRoutes():
     }
     
     r=Router(fromLoc,toLoc)
-    return Router.getRoutes(fromLoc,toLoc)
+    print(json.dumps(r.getRoutes()))
+    return json.dumps(r.getRoutes())
 
 
 if __name__ == '__main__':

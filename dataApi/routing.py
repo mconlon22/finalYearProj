@@ -61,7 +61,7 @@ class Router:
     def routeApi(self, *args, **kwargs):
 
         payload={
-      'apiKey':'ti86Dy46Dw_7mYx0c7IVO35ldKi2jiMCOtQM4Pb2eMA',
+      'apiKey':'z-0ZGCEpEnMAmOC7w2-IGoo76Y6bg0Yhu-xIE8CVziM',
       'waypoint0':'geo!'+str(self.fromLoc['lat'])+','+str(self.fromLoc['lng']),
       'waypoint1':'geo!'+str(self.toLoc['lat'])+','+str(self.toLoc['lng']),
       'mode':'fastest;car;traffic:disabled',

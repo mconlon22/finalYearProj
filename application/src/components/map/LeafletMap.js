@@ -139,56 +139,51 @@ class LeafletMap extends Component {
     routeCovidData:null
   }
   getRoutingData=()=>{
-    var params={params:{
-      apiKey:'z_s-RkrD1pso_3asPKR-ZTJuSBe7bQhjqp46h-VDmQ0',
-      waypoint0:'geo!'+this.state.from.lat.toString()+','+this.state.from.lng.toString(),
-      waypoint1:'geo!'+this.state.to.lat.toString()+','+this.state.to.lng.toString(),
-      mode:'fastest;car;traffic:disabled',
-      avoidareas:'',
-      return: 'polyline'
-  }
-    }
+   
+    
     var routeData=[]
     var routeLocationData=[]
-    axios.get("https://route.ls.hereapi.com/routing/7.2/calculateroute.json?",params)
-    .then((res)=>{
-    var response=res.data.response.route[0].leg[0].maneuver
-    for(var x=0;x<response.length-1;x++){
-      const val=response[x].position
-      console.log(val)
-      routeLocationData.push({lat:val.latitude,lon:val.longitude})
-      
-    }
-    console.log(routeLocationData)
-   for(var i=1;i<response.length-1;i++){
-     const from=response[i-1].position
-     const to=response[i].position
-    
-      routeData.push({
-        from_lat: from.latitude,
-        from_long:from.longitude,
-        id: to.id,
-        to_lat: to.latitude,
-        to_long: to.longitude,
-      })
-    }
-    params={
+    var routes=[]
+    const params={
       params:{
-        locations:routeLocationData
+        fromlat:this.state.from.lat,
+        fromlon:this.state.from.lng,
+        tolat:this.state.to.lat,
+        tolon:this.state.to.lng,
         }}
-    axios.get(`http://127.0.0.1:5000/getRoute`,params)
+    axios.get(`http://127.0.0.1:5000/getSafestRoute`,params)
       .then(res => {
-        console.log(res.data)
-        this.setState({routeCovidData:res.data})
+        res.data.map(route=>{
+          routeLocationData.push(JSON.parse(route))
+        })
+        console.log(routeLocationData.length)
+        for(var x=0;x<routeLocationData.length;x++){
+         for(var i=1;i<routeLocationData[x].length-1;i++){
+        const from=routeLocationData[x][i-1]
+        const to=routeLocationData[x][i]
+        
+          routeData.push({
+            from_lat: from.lat,
+            from_long:from.lon,
+            to_lat: to.lat,
+            to_long: to.lon,
+          })
+    }
+    routes.push(routeData)
+    }
+        console.log(routes)
+        this.setState({routeData:routes})
   
       })
-    console.log(routeData)
-    this.setState({routeData})
-      
-    })
     
   
-  }
+      
+    this.setState({routeData:routeData})
+      
+    }
+    
+  
+  
         setAddressTo=(value) =>{
           geocodeByAddress(value.label)
         .then(results => getLatLng(results[0]))
@@ -231,9 +226,11 @@ class LeafletMap extends Component {
       lat: position.coords.latitude,
       lon: position.coords.longitude
     });
+
     });
     
     const map = this.map
+
 
    
   
@@ -341,11 +338,11 @@ render(){
 
         {loaded?getGeoJSONComponent():<div></div>}   
         {this.state.from.lat!=null&&this.state.to.lat!=null&&this.state.routeData!=null?
-        this.state.routeData.map(({id, from_lat, from_long, to_lat, to_long}) => {
+        this.state.routeData.map(route=>{route.map(({id, from_lat, from_long, to_lat, to_long}) => {
           return <Polyline key={id} positions={[
             [from_lat, from_long], [to_lat, to_long],
           ]} color={'blue'} />
-          }):<div></div>}     
+          })}):<div></div>}     
       </Map>
             </Grid>
 
