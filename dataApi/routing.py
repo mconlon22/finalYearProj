@@ -4,31 +4,17 @@ import logging
 from shape import getLocNames 
 from shape import getBoudingBox
 import requests
-import logging
 
 # These two lines enable debugging at httplib level (requests->urllib3->http.client)
 # You will see the REQUEST, including HEADERS and DATA, and RESPONSE with HEADERS but without DATA.
-# The only thing missing will be the response.body which is not logged.
-try:
-    import http.client as http_client
-except ImportError:
-    # Python 2
-    import httplib as http_client
-http_client.HTTPConnection.debuglevel = 1
 
-# You must initialize logging, otherwise you'll not see debug output.
-logging.basicConfig()
-logging.getLogger().setLevel(logging.DEBUG)
-requests_log = logging.getLogger("requests.packages.urllib3")
-requests_log.setLevel(logging.DEBUG)
-requests_log.propagate = True
 
 requests.get('https://httpbin.org/headers')
 
 class Router:
     fromLoc=0
     toLoc=0
-    
+    routes=[]
     def __init__(self,fromLoc,toLoc):
         self.fromLoc=fromLoc
         self.toLoc=toLoc
@@ -55,14 +41,14 @@ class Router:
     def getRoutes(self):
         locationObjects=self.routeApi()
         locationJson=self.locationsToJsonRoute(locationObjects)
-        print(locationJson)
+        self.routes.append(locationJson)
         average1=self.getAverageCovid(locationObjects)
         bboxstr=self.getBboxString(locationObjects)
         secondRoute=self.routeApi(bboxstr=bboxstr)
         secondjson=self.locationsToJsonRoute(secondRoute)
-        print(secondjson)
+        self.routes.append(secondjson)
         average2=self.getAverageCovid(secondRoute)
-        print(average1,average2)
+        return self.routes
 
     def locationsToJsonRoute(self,locations):
         latlons=[]
@@ -75,7 +61,7 @@ class Router:
     def routeApi(self, *args, **kwargs):
 
         payload={
-      'apiKey':'LSmM2m_ZoJDJwklw3WDluKL3OsUaLsdehdxV28H0jJY',
+      'apiKey':'ti86Dy46Dw_7mYx0c7IVO35ldKi2jiMCOtQM4Pb2eMA',
       'waypoint0':'geo!'+str(self.fromLoc['lat'])+','+str(self.fromLoc['lng']),
       'waypoint1':'geo!'+str(self.toLoc['lat'])+','+str(self.toLoc['lng']),
       'mode':'fastest;car;traffic:disabled',

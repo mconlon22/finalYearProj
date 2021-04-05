@@ -10,6 +10,7 @@ from data import val
 from datetime import datetime
 from shape import getLocName
 from shape import getLocNames
+from routing import Router 
 
 import json
 from sqlalchemy import desc
@@ -138,6 +139,26 @@ def jsonToSql():
         db.session.add(areaObject)
         
     db.session.commit()
+
+
+@app.route('/getSafestRoute')
+def getSafestRoutes():
+    tolat=float(request.args["tolat"])
+    tolon=float(request.args["tolon"])
+    fromlat=float(request.args["fromlat"])
+    fromlon=float(request.args["fromlon"])
+    fromLoc={
+    'lat':fromlat,
+    'lng':fromlon
+    }
+    toLoc={
+        'lat':tolat,
+        'lng':tolon
+    }
+    
+    r=Router(fromLoc,toLoc)
+    return Router.getRoutes(fromLoc,toLoc)
+
 
 if __name__ == '__main__':
 
