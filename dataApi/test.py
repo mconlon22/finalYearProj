@@ -9,3 +9,15 @@ toLoc={
 }
 r=Router(fromLoc,toLoc)
 print(r.getRoutes())
+
+
+
+admin=true 
+needs_updating=true
+if admin:
+    if needs_updating:
+        pass 
+    else:
+        
+else: 
+    print('you need admin privalages')
