@@ -167,6 +167,7 @@ class LeafletMap extends Component {
             from_long:from.lon,
             to_lat: to.lat,
             to_long: to.lon,
+            id:routeLocationData[x][i].id
           })
     }
     routes.push(routeData)
@@ -337,9 +338,10 @@ render(){
 
 
         {loaded?getGeoJSONComponent():<div></div>}   
-        {this.state.from.lat!=null&&this.state.to.lat!=null&&this.state.routeData!=null?
-        this.state.routeData.map(route=>{route.map(({id, from_lat, from_long, to_lat, to_long}) => {
-          return <Polyline key={id} positions={[
+        {this.state.routeData!=null?
+        this.state.routeData.map((route)=>{route.map(({ id,from_lat, from_long, to_lat, to_long}) => {
+          console.log( [from_lat, from_long], [to_lat, to_long])
+          return <Polyline  key={id} positions={[
             [from_lat, from_long], [to_lat, to_long],
           ]} color={'blue'} />
           })}):<div></div>}     

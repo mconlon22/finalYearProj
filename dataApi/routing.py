@@ -14,7 +14,6 @@ requests.get('https://httpbin.org/headers')
 class Router:
     fromLoc=0
     toLoc=0
-    routes=[]
     def __init__(self,fromLoc,toLoc):
         self.fromLoc=fromLoc
         self.toLoc=toLoc
@@ -39,21 +38,27 @@ class Router:
                     maxLocation=location
             return maxLocation
     def getRoutes(self):
+        routes=[]
+
         locationObjects=self.routeApi()
         locationJson=self.locationsToJsonRoute(locationObjects)
-        self.routes.append(locationJson)
+        print('locationJson')
+
+        print(locationJson)
+        routes.append(locationJson)
         average1=self.getAverageCovid(locationObjects)
         bboxstr=self.getBboxString(locationObjects)
         secondRoute=self.routeApi(bboxstr=bboxstr)
+        print(secondRoute)
         secondjson=self.locationsToJsonRoute(secondRoute)
-        self.routes.append(secondjson)
+        routes.append(secondjson)
         average2=self.getAverageCovid(secondRoute)
-        return self.routes
+        return routes
 
     def locationsToJsonRoute(self,locations):
         latlons=[]
         for location in locations:
-            latlons.append({'lat':location['lat'],'lon':location['lon']})
+            latlons.append({'lat':location['lat'],'lon':location['lon'],'id':location['id']})
         return json.dumps(latlons)
         
 
@@ -61,7 +66,7 @@ class Router:
     def routeApi(self, *args, **kwargs):
 
         payload={
-      'apiKey':'z-0ZGCEpEnMAmOC7w2-IGoo76Y6bg0Yhu-xIE8CVziM',
+      'apiKey':'--kPVhHOXJjOmKcdKVcrgod6IqVfyYy0WhYzhjxtbj8',
       'waypoint0':'geo!'+str(self.fromLoc['lat'])+','+str(self.fromLoc['lng']),
       'waypoint1':'geo!'+str(self.toLoc['lat'])+','+str(self.toLoc['lng']),
       'mode':'fastest;car;traffic:disabled',
