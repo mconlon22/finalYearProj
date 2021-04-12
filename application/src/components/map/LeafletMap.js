@@ -155,31 +155,36 @@ class LeafletMap extends Component {
       .then(res => {
         res.data.map(route=>{
           routeLocationData.push(JSON.parse(route))
+          console.log(JSON.parse(route))
         })
+        var covidData=[]
         console.log(routeLocationData.length)
         for(var x=0;x<routeLocationData.length;x++){
-         for(var i=1;i<routeLocationData[x].length-1;i++){
-        const from=routeLocationData[x][i-1]
-        const to=routeLocationData[x][i]
-        
+          console.log(routeLocationData[x])
+         for(var i=1;i<routeLocationData[x][0].latlons.length-1;i++){
+        const from=routeLocationData[x][0].latlons[i-1]
+        const to=routeLocationData[x][0].latlons[i]
+        covidData.push(routeLocationData[x][0].LocNames)
           routeData.push({
             from_lat: from.lat,
             from_long:from.lon,
             to_lat: to.lat,
             to_long: to.lon,
-            id:routeLocationData[x][i].id
+            id:routeLocationData[x][0].latlons[i].id
           })
     }
+    console.log('push',routeData)
     routes.push(routeData)
     }
         console.log(routes)
         this.setState({routeData:routes})
+                this.setState({routeCovidData:covidData})
+
   
       })
     
   
       
-    this.setState({routeData:routeData})
       
     }
     
@@ -267,7 +272,7 @@ render(){
             <Card> 
                   <CardContent>
                             <Typography>
-                            This Route Passes Through
+                            Route 1
           </Typography>
           <TableContainer component={Paper}>
       <Table  aria-label="simple table">
@@ -284,13 +289,50 @@ render(){
        </TableBody>
       </Table>
     </TableContainer>
-      {this.state.routeCovidData!=null?this.state.routeCovidData.map((data)=>{
+      {this.state.routeCovidData!=null?this.state.routeCovidData[0].map((data)=>{
         return (
-          <TableRow key={data.location}>
+          <TableRow key={data.ENGLISH}>
               <TableCell component="th" scope="row">
-                {data.location}
+                {data.ENGLISH}
               </TableCell>
-              <TableCell align="right">{data.amount}</TableCell>
+              <TableCell align="right">{data.P14_100k_T}</TableCell>
+          
+            </TableRow>
+        )
+      }):<div></div>
+
+      }
+
+      </CardContent>
+            </Card>
+
+              <Card> 
+                  <CardContent>
+                            <Typography>
+                            Route 2
+          </Typography>
+          <TableContainer component={Paper}>
+      <Table  aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>Location</TableCell>
+            <TableCell align="right">Covid Level Per 100k</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+
+
+
+       </TableBody>
+      </Table>
+    </TableContainer>
+      {this.state.routeCovidData!=null?this.state.routeCovidData[1].map((data)=>{
+        return (
+          <TableRow key={data.ENGLISH}>
+              <TableCell component="th" scope="row">
+                {data.ENGLISH}
+              </TableCell>
+              <TableCell align="right">{data.P14_100k_T}</TableCell>
           
             </TableRow>
         )
@@ -339,13 +381,17 @@ render(){
 
         {loaded?getGeoJSONComponent():<div></div>}   
         {this.state.routeData!=null?
-        this.state.routeData.map((route)=>{
-          route.map(({ id,from_lat, from_long, to_lat, to_long}) => {
-          console.log( [from_lat, from_long], [to_lat, to_long])
-          return <Polyline  key={id} positions={[
+        this.state.routeData[0].map(({id, from_lat, from_long, to_lat, to_long}) => {
+          return <Polyline key={id} positions={[
             [from_lat, from_long], [to_lat, to_long],
           ]} color={'blue'} />
-          })}):<div></div>}     
+          }):<div></div>}  
+          {this.state.routeData!=null?
+        this.state.routeData[1].map(({id, from_lat, from_long, to_lat, to_long}) => {
+          return <Polyline key={id} positions={[
+            [from_lat, from_long], [to_lat, to_long],
+          ]} color={'blue'} />
+          }):<div></div>}  
       </Map>
             </Grid>
 
