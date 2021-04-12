@@ -20,7 +20,7 @@ export default class Graph extends React.Component {
 
 
 
-    axios.get(`http://127.0.0.1:5000/getLocalData?lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
+    axios.get(`http://178.62.61.92:3101/getLocalData?lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
       .then(res => {
         var data = res.data;
         console.log(areaData)
@@ -40,6 +40,7 @@ export default class Graph extends React.Component {
         this.setState({ areaData });
 
     });
+    
     
 
       })

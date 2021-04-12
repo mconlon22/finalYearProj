@@ -1,3 +1,6 @@
 flask
 flask_cors
 lxml
+scipy 
+numpy
+wheel
