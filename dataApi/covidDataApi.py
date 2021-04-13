@@ -88,24 +88,18 @@ def getLocalData():
     lat=float(request.args["lat"])
     lon=float(request.args["lon"])
     userLocation=getLocName(lat,lon)
-    print(userLocation)
     data = AreaData.query.filter(AreaData.location.ilike(userLocation['ENGLISH'])).all()
-    print(data)
     schema = CovidAreaSchema(many=True)
-    print(schema.dump(data))
     return jsonify(schema.dump(data))
 @app.route('/getRoute')
 def getRouteLocations():
     locations=request.args.getlist('locations[]')
-    print(locations)
     jsonlocations=[]
     for location in locations: jsonlocations.append(json.loads(location))
     userLocations=getLocNames(jsonlocations)
-    print(userLocations)
     locations=[]
     for location in userLocations:
         if not isinstance(location, str):
-            print(location)
             locations.append(AreaData.query.filter(AreaData.location.ilike(location['ENGLISH'])).order_by(desc('date')).limit(1).all()[0])
     print('data')
 

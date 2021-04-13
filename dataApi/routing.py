@@ -4,6 +4,8 @@ import logging
 from shape import getLocNames 
 from shape import getBoudingBox
 import requests
+import time
+
 
 # These two lines enable debugging at httplib level (requests->urllib3->http.client)
 # You will see the REQUEST, including HEADERS and DATA, and RESPONSE with HEADERS but without DATA.
@@ -27,7 +29,7 @@ class Router:
             covidSum+=float(location['P14_100k_T'])
         return covidSum/len(locationObjects)
     def getMaxCovid(self,locationObjects):
-            locationObjects=getLocNames(locationObjects)
+            locationObjects=self.names
 
             covidMax=0
             maxLocation=0
@@ -42,18 +44,17 @@ class Router:
         routes=[]
 
         locationObjects=self.routeApi()
-        print('locationJson')
         self.names=getLocNames(locationObjects)
         locationJson=self.locationsToJsonRoute(locationObjects)
 
-        print(locationJson)
         routes.append(locationJson)
         average1=self.getAverageCovid(locationObjects)
         bboxstr=self.getBboxString(locationObjects)
         secondRoute=self.routeApi(bboxstr=bboxstr)
         self.names=getLocNames(secondRoute)
+        time.sleep(2)
 
-        print(secondRoute)
+
         secondjson=self.locationsToJsonRoute(secondRoute)
         routes.append(secondjson)
         average2=self.getAverageCovid(secondRoute)
@@ -64,6 +65,7 @@ class Router:
         returnObject=[]
         for location in locations:
             latlons.append({'lat':location['lat'],'lon':location['lon'],'id':location['id']})
+        print(self.names)
         returnObject.append({'LocNames':self.names,'latlons':latlons})
         return json.dumps(returnObject)
         
@@ -72,7 +74,7 @@ class Router:
     def routeApi(self, *args, **kwargs):
 
         payload={
-      'apiKey':'cHpzyNsRLGjewD4ALO8fIj_hZrNecH5-AkSEKUOP91E',
+      'apiKey':'dhpuXL7dTvj_R7Al11HHhOkwav0tusKHDGnReMyB8k4',
       'waypoint0':'geo!'+str(self.fromLoc['lat'])+','+str(self.fromLoc['lng']),
       'waypoint1':'geo!'+str(self.toLoc['lat'])+','+str(self.toLoc['lng']),
       'mode':'fastest;car;traffic:disabled',

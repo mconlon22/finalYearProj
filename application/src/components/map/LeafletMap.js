@@ -151,7 +151,7 @@ class LeafletMap extends Component {
         tolat:this.state.to.lat,
         tolon:this.state.to.lng,
         }}
-    axios.get(`http://127.0.0.1:5000/getSafestRoute`,params)
+    axios.get(`http://178.62.61.92:3101/getSafestRoute`,params)
       .then(res => {
         res.data.map(route=>{
           routeLocationData.push(JSON.parse(route))
@@ -161,10 +161,10 @@ class LeafletMap extends Component {
         console.log(routeLocationData.length)
         for(var x=0;x<routeLocationData.length;x++){
           console.log(routeLocationData[x])
+        covidData.push(routeLocationData[x][0].LocNames)
          for(var i=1;i<routeLocationData[x][0].latlons.length-1;i++){
         const from=routeLocationData[x][0].latlons[i-1]
         const to=routeLocationData[x][0].latlons[i]
-        covidData.push(routeLocationData[x][0].LocNames)
           routeData.push({
             from_lat: from.lat,
             from_long:from.lon,

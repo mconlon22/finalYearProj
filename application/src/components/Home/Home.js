@@ -27,7 +27,7 @@ export default class Home extends React.Component {
 
   componentDidMount() {
     
-    axios.get(`http://127.0.0.1:5000/getCovid`)
+    axios.get(`http://178.62.61.92:3101/getCovid`)
       .then(res => {
         const covidData = res.data[0];
         console.log(covidData)

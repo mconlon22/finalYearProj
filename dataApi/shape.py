@@ -4,6 +4,7 @@ from minRect import minimum_bounding_rectangle
 import json
 path="./shapefiles/Covid19_LEACases_Mapped.shp"
 r = shapefile.Reader(path)
+shapes = r.shapes()
 
 def getLocName(lat,lon):
     def check(polygon,lon, lat):
@@ -16,7 +17,6 @@ def getLocName(lat,lon):
     # read your shapefile
 
     # get the shapes
-    shapes = r.shapes()
 
     # build a shapely polygon from your shape
 
