@@ -5,18 +5,19 @@ from shape import getLocNames
 from shape import getBoudingBox
 import requests
 import time
-
+from credentials import getToken
 
 # These two lines enable debugging at httplib level (requests->urllib3->http.client)
 # You will see the REQUEST, including HEADERS and DATA, and RESPONSE with HEADERS but without DATA.
 
 
-requests.get('https://httpbin.org/headers')
 
 class Router:
     fromLoc=0
     toLoc=0
     names=[]
+    token=getToken()['access_token']
+   
     def __init__(self,fromLoc,toLoc):
         self.fromLoc=fromLoc
         self.toLoc=toLoc
@@ -74,7 +75,7 @@ class Router:
     def routeApi(self, *args, **kwargs):
 
         payload={
-      'apiKey':'dhpuXL7dTvj_R7Al11HHhOkwav0tusKHDGnReMyB8k4',
+            'Content-Type':'application/json',
       'waypoint0':'geo!'+str(self.fromLoc['lat'])+','+str(self.fromLoc['lng']),
       'waypoint1':'geo!'+str(self.toLoc['lat'])+','+str(self.toLoc['lng']),
       'mode':'fastest;car;traffic:disabled',
@@ -85,13 +86,16 @@ class Router:
         }
         if  isinstance(kwargs.get('bboxstr',None),str):
             payload['avoidareas']=kwargs.get('bboxstr',None)
-        
-        r = requests.get('https://route.ls.hereapi.com/routing/7.2/calculateroute.json', params=payload)
+        securityparams={'grant_type':'client_credentials'}
+
+        r = requests.get('https://route.ls.hereapi.com/routing/7.2/calculateroute.json',headers={'Authorization': 'Bearer {}'.format(self.token)},params=payload)
         r=r.json()
+        print(r)
         locations=r['response']['route'][0]['leg'][0]['maneuver']
         for location in locations:
             location['lat']=location['position']['latitude']
             location['lon']=location['position']['longitude']
+
             del location['position']
         return locations
     

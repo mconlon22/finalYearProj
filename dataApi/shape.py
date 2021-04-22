@@ -37,7 +37,6 @@ def getLocNames(locations):
             distinctNames[loc['ENGLISH']]=1
             print(loc)
             names.append({'ENGLISH':loc['ENGLISH'],'P14_100k_T':loc['P14_100k_T']})
-        
     return names
 def getRect():
     with open(path) as f:
