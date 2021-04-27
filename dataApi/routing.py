@@ -27,7 +27,8 @@ class Router:
         locationObjects=self.names
         covidSum=0
         for location in locationObjects:
-            covidSum+=float(location['P14_100k_T'])
+            if location['P14_100k_T']!='Less than 5 cases':
+                covidSum+=float(location['P14_100k_T'])
         return covidSum/len(locationObjects)
     def getMaxCovid(self,locationObjects):
             locationObjects=self.names
@@ -35,11 +36,12 @@ class Router:
             covidMax=0
             maxLocation=0
             for location in locationObjects:
-                if float(location['P14_100k_T']) > covidMax:
-                    
-                    covidMax=float(location['P14_100k_T'])
-                    
-                    maxLocation=location
+                if location['P14_100k_T']!='Less than 5 cases':
+                    if float(location['P14_100k_T']) > covidMax:
+                        
+                        covidMax=float(location['P14_100k_T'])
+                        
+                        maxLocation=location
             return maxLocation
     def getRoutes(self):
         routes=[]
@@ -66,7 +68,6 @@ class Router:
         returnObject=[]
         for location in locations:
             latlons.append({'lat':location['lat'],'lon':location['lon'],'id':location['id']})
-        print(self.names)
         returnObject.append({'LocNames':self.names,'latlons':latlons})
         return json.dumps(returnObject)
         
@@ -90,7 +91,6 @@ class Router:
 
         r = requests.get('https://route.ls.hereapi.com/routing/7.2/calculateroute.json',headers={'Authorization': 'Bearer {}'.format(self.token)},params=payload)
         r=r.json()
-        print(r)
         locations=r['response']['route'][0]['leg'][0]['maneuver']
         for location in locations:
             location['lat']=location['position']['latitude']

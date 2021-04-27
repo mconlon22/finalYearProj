@@ -14,8 +14,9 @@ export default class Graph extends React.Component {
   
       componentDidMount() {
         var position=[]
+        console.log('this aint working')
          navigator.geolocation.getCurrentPosition((position)=> {
-    
+          console.log('working')
       position=position
 
 

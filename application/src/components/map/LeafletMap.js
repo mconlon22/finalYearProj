@@ -151,7 +151,7 @@ class LeafletMap extends Component {
         tolat:this.state.to.lat,
         tolon:this.state.to.lng,
         }}
-    axios.get(`http://178.62.61.92:3101/getSafestRoute`,params)
+    axios.get(`http://localhost:3101/getSafestRoute`,params)
       .then(res => {
         res.data.map(route=>{
           routeLocationData.push(JSON.parse(route))
@@ -243,6 +243,15 @@ class LeafletMap extends Component {
 
    
   }
+  averageCovid=(i)=>{
+    var sum=0
+    console.log(this.state.routeCovidData[i])
+    this.state.routeCovidData[i].forEach((route)=>{
+      sum+=parseInt(route.P14_100k_T)
+      console.log(sum,route.P14_100k_T)
+    })
+    return sum/this.state.routeCovidData[i].length
+  }
   
     saveMap = map => {
     this.map = map;
@@ -275,6 +284,7 @@ render(){
                             Route 1
           </Typography>
           <TableContainer component={Paper}>
+    {this.state.routeCovidData!=null?<Typography>Average Covid {this.averageCovid(0)}</Typography>:<div></div>}
       <Table  aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -288,7 +298,9 @@ render(){
 
        </TableBody>
       </Table>
+      
     </TableContainer>
+
       {this.state.routeCovidData!=null?this.state.routeCovidData[0].map((data)=>{
         return (
           <TableRow key={data.ENGLISH}>
@@ -312,6 +324,7 @@ render(){
                             Route 2
           </Typography>
           <TableContainer component={Paper}>
+      {this.state.routeCovidData!=null?<Typography>Average Covid {this.averageCovid(1)}</Typography>:<div></div>}
       <Table  aria-label="simple table">
         <TableHead>
           <TableRow>

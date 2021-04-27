@@ -35,7 +35,6 @@ def getLocNames(locations):
         loc=getLocName(location['lat'],location['lon'])
         if loc['ENGLISH'] not in distinctNames :
             distinctNames[loc['ENGLISH']]=1
-            print(loc)
             names.append({'ENGLISH':loc['ENGLISH'],'P14_100k_T':loc['P14_100k_T']})
     return names
 def getRect():
