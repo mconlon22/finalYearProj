@@ -1,4 +1,4 @@
-from dataScraper import getCovidDataObject
+from sqlalchemy.sql.expression import null
 import time
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import and_
@@ -6,12 +6,11 @@ from sqlalchemy import and_
 from flask import Flask,request
 from flask_marshmallow import Marshmallow
 from flask_cors import CORS
-from data import val
 from datetime import datetime
 from shape import getLocName
 from shape import getLocNames
 from routing import Router 
-
+from shape import getNeighbours
 import json
 from sqlalchemy import desc
 
@@ -77,8 +76,6 @@ def index():
 @app.route('/getCovid')
 def getTodays():
     entities = CovidData.query.order_by(desc(CovidData.date)).limit(3).all()
-
-
     dataSchema = CovidDataSchema(many=True)
     print(entities)
     return jsonify(dataSchema.dump(entities))
@@ -87,10 +84,33 @@ def getTodays():
 def getLocalData():
     lat=float(request.args["lat"])
     lon=float(request.args["lon"])
+    locations=[]
+
     userLocation=getLocName(lat,lon)
-    data = AreaData.query.filter(AreaData.location.ilike(userLocation['ENGLISH'])).all()
+    print(userLocation)
+    returning={}
+    
     schema = CovidAreaSchema(many=True)
-    return jsonify(schema.dump(data))
+    datestr=datetime.today().strftime('%Y-%m-%d')
+    response=requests.get('https://services-eu1.arcgis.com/z6bHNio59iTqqSUY/arcgis/rest/services/Covid19_LEACases_Mapped_Historic_Records/FeatureServer/0/query?f=json&groupByFieldsForStatistics=CAST(EXTRACT(YEAR%20FROM%20EventDate%20-INTERVAL%20%27-1%3A59%3A59%27%20HOUR%20TO%20SECOND)%20AS%20VARCHAR(4))%20%7C%7C%20%27-%27%20%7C%7C%20CAST(EXTRACT(MONTH%20FROM%20EventDate%20-INTERVAL%20%27-1%3A59%3A59%27%20HOUR%20TO%20SECOND)%20AS%20VARCHAR(2))%20%7C%7C%20%27-%27%20%7C%7C%20CAST(EXTRACT(DAY%20FROM%20EventDate%20-INTERVAL%20%27-1%3A59%3A59%27%20HOUR%20TO%20SECOND)%20AS%20VARCHAR(2))%2CENGLISH&outFields=OBJECTID%2CP14_100k%2CEventDate%2CENGLISH&outStatistics=%5B%7B%22onStatisticField%22%3A%22P14_100k%22%2C%22outStatisticFieldName%22%3A%22value%22%2C%22statisticType%22%3A%22sum%22%7D%5D&resultType=standard&returnGeometry=false&spatialRel=esriSpatialRelIntersects&where=(EventDate%20BETWEEN%20timestamp%20%272021-01-01%2000%3A00%3A00%27%20AND%20CURRENT_TIMESTAMP)%20AND%20(EventDate%20BETWEEN%20timestamp%20%272021-01-04%2000%3A00%3A00%27%20AND%20timestamp%20%27'+datestr+'%2000%3A00%3A00%27)')
+    if response.status_code==200:
+        data=json.loads(response.content)
+        for feature in data['features']:
+            if feature['attributes']['ENGLISH'] == userLocation['ENGLISH']:
+                locationname=feature['attributes']['ENGLISH']
+                print(feature['attributes']['EXPR_1'])
+        neighbours=[locationname]
+        for neighbour in getNeighbours(userLocation['ENGLISH']):
+            neighbours.append(neighbour)
+        for neighbour in neighbours:
+            locationvalues=[]
+            for feature in data['features']:
+                if feature['attributes']['ENGLISH'] == neighbour:
+                    locationvalues.append(feature['attributes'])
+                    locationname=feature['attributes']['ENGLISH']
+            locations.append(locationvalues)
+               
+    return jsonify(locations)
 @app.route('/getRoute')
 def getRouteLocations():
     locations=request.args.getlist('locations[]')

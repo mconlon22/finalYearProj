@@ -1,6 +1,5 @@
 import shapefile
 from shapely.geometry import shape, Point
-from minRect import minimum_bounding_rectangle 
 import json
 path="./shapefiles/Covid19_LEACases_Mapped.shp"
 r = shapefile.Reader(path)
@@ -48,4 +47,15 @@ def getBoudingBox(locationName):
             bbox = r.shapes()[i].bbox
             return bbox
 
+def getNeighbours(locationName):
+    neighbours = []
+    print(locationName)
+    for i,record in enumerate(r.shapeRecords()):
+        if record.record['ENGLISH']==locationName:
+            polygon = r.shapes()[i]
+    for i,record in enumerate(r.shapeRecords()):
+        if shape(polygon).touches(shape(r.shapes()[i])):
+           neighbours.append(record.record['ENGLISH'])
+    return neighbours
+    
 

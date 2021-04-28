@@ -47,7 +47,7 @@ const Calculator=()=>{
         ethnicity: ethnicity,
         sex:sex
       }
-      axios.post(`http://178.62.61.92:3102/userRisk`, null, { params:params})
+      axios.post(`https://exams.irish/risk/userRisk`, null, { params:params})
       .then(res => {
         console.log(res.data)
        window.localStorage.setItem("userRisk",Math.round(res.data*10)/10)

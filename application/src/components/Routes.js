@@ -1,7 +1,9 @@
-import React from 'react';
+import React,{lazy} from 'react';
+import Home from './Home/Home'
 import Calculator from './Calculator'
 import LeafletMap from './map/LeafletMap'
-import Home from './Home/Home'
+
+
 
 
 

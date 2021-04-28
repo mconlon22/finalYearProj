@@ -3,7 +3,6 @@
 import React,{ Component } from 'react'
 import {Map,TileLayer,Popup,Marker,GeoJSON ,Circle,Polyline} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
-import Routing from "./RoutingMachine";
 import * as ELG from "esri-leaflet-geocoder";
 import Grid from '@material-ui/core/Grid';
 import "leaflet-control-geocoder/dist/Control.Geocoder.css";
@@ -151,7 +150,11 @@ class LeafletMap extends Component {
         tolat:this.state.to.lat,
         tolon:this.state.to.lng,
         }}
+<<<<<<< Updated upstream
     axios.get(`http://localhost:3101/getSafestRoute`,params)
+=======
+    axios.get(`https://exams.irish/data/getSafestRoute`,params)
+>>>>>>> Stashed changes
       .then(res => {
         res.data.map(route=>{
           routeLocationData.push(JSON.parse(route))
@@ -178,7 +181,7 @@ class LeafletMap extends Component {
     }
         console.log(routes)
         this.setState({routeData:routes})
-                this.setState({routeCovidData:covidData})
+        this.setState({routeCovidData:covidData})
 
   
       })
