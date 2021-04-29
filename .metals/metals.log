@@ -101,3 +101,24 @@
 [0m2021.04.28 20:46:34 INFO  shutting down Metals[0m
 =======
 >>>>>>> Stashed changes
+[0m2021.04.28 20:59:23 INFO  Started: Metals version 0.10.2 in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp' for client vscode 1.55.2.[0m
+[0m2021.04.28 20:59:25 INFO  time: initialize in 1.68s[0m
+[0m2021.04.28 20:59:30 WARN  Build server is not auto-connectable.[0m
+[0m2021.04.28 20:59:30 WARN  no build tool detected in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. [0m
+[0m2021.04.28 20:59:39 INFO  shutting down Metals[0m
+[0m2021.04.29 19:46:23 INFO  Started: Metals version 0.10.2 in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp' for client vscode 1.55.2.[0m
+[0m2021.04.29 19:46:25 INFO  time: initialize in 1.34s[0m
+[0m2021.04.29 19:46:25 WARN  Build server is not auto-connectable.[0m
+[0m2021.04.29 19:46:25 WARN  no build tool detected in workspace 'C:\Users\marti\Desktop\4thYearsem2\fyp'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. [0m
+Apr 29, 2021 7:53:56 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Apr 29, 2021 7:54:38 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Apr 29, 2021 7:54:39 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Apr 29, 2021 7:54:40 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Apr 29, 2021 7:54:44 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
+Apr 29, 2021 7:54:44 PM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
+INFO: Unsupported notification method: $/setTraceNotification
