@@ -17,20 +17,32 @@ def getRandomLocation():
 
 sumdecrease=0
 counter=0
+sumLength=0
+sumTime=0
 
 for index in range(200):
+    print(index)
     location1=getRandomLocation()
     location2=getRandomLocation()
     router=Router(location1, location2)
     routes=[]
-    locationObjects=router.routeApi()
+    response=router.routeApi()
+    locationObjects=response['response']['route'][0]['leg'][0]['maneuver']
+    lengthFastest=response['response']['route'][0]['leg'][0]['length']
+    travelTimeFastest=response['response']['route'][0]['leg'][0]['travelTime']
+
     router.names=getLocNames(locationObjects)
     locationJson=router.locationsToJsonRoute(locationObjects)
 
     routes.append(locationJson)
     average1=router.getAverageCovid(locationObjects)
     bboxstr=router.getBboxString(locationObjects)
-    secondRoute=router.routeApi(bboxstr=bboxstr)
+    response1=router.routeApi(bboxstr=bboxstr)
+    secondRoute=response1['response']['route'][0]['leg'][0]['maneuver']
+    travelTimeSafer=response1['response']['route'][0]['leg'][0]['travelTime']
+    lengthSafer=response1['response']['route'][0]['leg'][0]['length']
+
+
     router.names=getLocNames(secondRoute)
     time.sleep(2)
 
@@ -40,10 +52,18 @@ for index in range(200):
 
     average2=router.getAverageCovid(secondRoute)
     if average2<average1:
-        difference=((average1-average2)/average1)*100
-        print('difference : ' + str(difference))
-        sumdecrease+=difference
-        counter+=1
+        covidDif=((average1-average2)/average1)*100
+        timeDif=((travelTimeSafer-travelTimeFastest)/travelTimeFastest)*100
+        lengthDif=((lengthSafer-lengthFastest)/lengthFastest)*100
+        if timeDif<30:
+            print('covidDif : ' + str(covidDif)+'    lengthDif : ' + str(lengthDif)+'    timeDif : ' + str(timeDif))
+            sumLength+=lengthDif
+            sumdecrease+=covidDif
+            sumTime+=timeDif
+            counter+=1
+        else:print('time diff too high')
     else: print('increase')
 averageDecrease=sumdecrease/counter
-print('average decrease = '+str( averageDecrease))
+averageLength=sumLength/counter
+averageTime=sumTime/counter
+print('Average % difference in covid= '+str( averageDecrease)+'   dif length  : '+ str(averageLength)+'  time average dif   :'  +str(averageTime))

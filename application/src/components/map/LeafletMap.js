@@ -25,6 +25,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 
 var data=null
@@ -136,7 +137,8 @@ class LeafletMap extends Component {
     from:{lat:null,lng:null},
     to:{lat:null,lng:null},
     routeData:null,
-    routeCovidData:null
+    routeCovidData:null,
+    loading:false
   }
   getRoutingData=()=>{
    
@@ -151,8 +153,11 @@ class LeafletMap extends Component {
         tolat:this.state.to.lat,
         tolon:this.state.to.lng,
         }}
-    axios.get(`http://localhost:3101/getSafestRoute`,params)
+        this.setState({loading:true})
+        this.setState({routeCovidData:1})
+    axios.get(`https://exams.irish/data/getSafestRoute`,params)
       .then(res => {
+
         res.data.map(route=>{
           routeLocationData.push(JSON.parse(route))
           console.log(JSON.parse(route))
@@ -179,6 +184,7 @@ class LeafletMap extends Component {
         console.log(routes)
         this.setState({routeData:routes})
                 this.setState({routeCovidData:covidData})
+                this.setState({loading:false})
 
   
       })
@@ -218,6 +224,7 @@ class LeafletMap extends Component {
           }
         })
         }
+        
 
        
    
@@ -280,11 +287,19 @@ render(){
             <Grid item sm={3} xs={12} spacing={1}  >
             <Card> 
                   <CardContent>
-                            <Typography>
-                            Route 1
+                  <Typography>
+                            Routes
+          </Typography>
+                            
+    {this.state.routeCovidData!=null? 
+    <div>        
+    {this.state.loading?<div>      <CircularProgress /></div>:<div>
+    <Typography>
+                            Fastest Route
           </Typography>
           <TableContainer component={Paper}>
-    {this.state.routeCovidData!=null?<Typography>Average Covid {this.averageCovid(0)}</Typography>:<div></div>}
+
+<Typography>Average Covid {this.averageCovid(0)}</Typography>
       <Table  aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -299,9 +314,11 @@ render(){
        </TableBody>
       </Table>
       
-    </TableContainer>
-
-      {this.state.routeCovidData!=null?this.state.routeCovidData[0].map((data)=>{
+    </TableContainer></div>}  
+    
+    </div>
+:<div>      </div>}
+      {this.state.routeCovidData!=null&& !this.state.loading?this.state.routeCovidData[0].map((data)=>{
         return (
           <TableRow key={data.ENGLISH}>
               <TableCell component="th" scope="row">
@@ -317,14 +334,16 @@ render(){
 
       </CardContent>
             </Card>
-
-              <Card> 
+             <Card> 
                   <CardContent>
-                            <Typography>
-                            Route 2
+                            
+    {this.state.routeCovidData!=null? 
+    <div>        
+    {this.state.loading?<div>      </div>:<div><Typography>
+                            Safest Route
           </Typography>
           <TableContainer component={Paper}>
-      {this.state.routeCovidData!=null?<Typography>Average Covid {this.averageCovid(1)}</Typography>:<div></div>}
+<Typography>Average Covid {this.averageCovid(1)}</Typography>
       <Table  aria-label="simple table">
         <TableHead>
           <TableRow>
@@ -338,8 +357,12 @@ render(){
 
        </TableBody>
       </Table>
-    </TableContainer>
-      {this.state.routeCovidData!=null?this.state.routeCovidData[1].map((data)=>{
+      
+    </TableContainer></div>}  
+    
+    </div>
+:<div>      </div>}
+      {this.state.routeCovidData!=null&& !this.state.loading?this.state.routeCovidData[1].map((data)=>{
         return (
           <TableRow key={data.ENGLISH}>
               <TableCell component="th" scope="row">
@@ -355,6 +378,9 @@ render(){
 
       </CardContent>
             </Card>
+            
+
+             
       </Grid>
             <Grid item sm={9} xs={12} spacing={1}  >
              <Grid item sm={2} xs={12} spacing={1}  >

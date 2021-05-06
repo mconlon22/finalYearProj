@@ -46,14 +46,16 @@ class Router:
     def getRoutes(self):
         routes=[]
 
-        locationObjects=self.routeApi()
+        response=self.routeApi()
+        locationObjects=response['response']['route'][0]['leg'][0]['maneuver']
         self.names=getLocNames(locationObjects)
         locationJson=self.locationsToJsonRoute(locationObjects)
 
         routes.append(locationJson)
         average1=self.getAverageCovid(locationObjects)
         bboxstr=self.getBboxString(locationObjects)
-        secondRoute=self.routeApi(bboxstr=bboxstr)
+        response1=self.routeApi(bboxstr=bboxstr)
+        secondRoute=response1['response']['route'][0]['leg'][0]['maneuver']
         self.names=getLocNames(secondRoute)
         time.sleep(2)
 
@@ -97,7 +99,8 @@ class Router:
             location['lon']=location['position']['longitude']
 
             del location['position']
-        return locations
+        r['response']['route'][0]['leg'][0]['maneuver']=locations
+        return r
     
 
         
@@ -117,5 +120,3 @@ class Router:
 
 
 
-
-     

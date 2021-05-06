@@ -27,7 +27,7 @@ export default class Home extends React.Component {
 
   componentDidMount() {
     
-    axios.get(`http://178.62.61.92:3101/getCovid`)
+    axios.get(`https://exams.irish/data/getCovid`)
       .then(res => {
         const covidData = res.data[0];
         console.log(covidData)
@@ -131,9 +131,10 @@ export default class Home extends React.Component {
           
          
           </Grid>
-           <Grid item xs={3} spacing={1} sm={3} >
+           <Grid item xs={3} spacing={1} sm={1} >
            </Grid>
                      <Grid item xs={12} spacing={1} sm={9}  >
+                     <h1>Local Covid Graph</h1>
 
                           <Graph style={section}/>
                          

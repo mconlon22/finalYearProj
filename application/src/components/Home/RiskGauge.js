@@ -30,9 +30,8 @@ class Graph extends React.Component {
         console.log('working')
         this.props.history.push('/Calculator') 
       }
-        
-      
-  console.log(window.localStorage.getItem('userRisk'))
+       
+      window.localStorage.getItem('locationRisk')
 this.state.locationRisk=window.localStorage.getItem("locationRisk")!=null?this.state.locationRisk=Number(window.localStorage.getItem("locationRisk")):this.state.locationRisk=0
 this.state.personalRisk=window.localStorage.getItem("userRisk")!=null?this.state.personalRisk=Number(window.localStorage.getItem("userRisk")):this.state.personalRisk=0
 
@@ -47,7 +46,7 @@ else{
 const total=this.state.total
 
 console.log(typeof Number(locationRisk),typeof Number(personalRisk),typeof total)
-
+ 
         return (
 <div>
 
