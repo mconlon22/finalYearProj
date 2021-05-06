@@ -112,7 +112,7 @@ export default class Home extends React.Component {
           <Typography variant="h6" component="h2" >Cases:                {this.state.cases!=null?this.state.cases:<div></div>}</Typography>
            </Grid>
             <Grid item xs={12} spacing={1} sm={12}>
-          <Typography variant="h6" component="h2" >ICU Admissions:  {this.state.icu!=null?this.state.icu:<div></div>}</Typography>
+          <Typography variant="h6" component="h2" >ICU:  {this.state.icu!=null?this.state.icu:<div></div>}</Typography>
            </Grid>
             <Grid item xs={3} spacing={1} sm={9} >
            </Grid>

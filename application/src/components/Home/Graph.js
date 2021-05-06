@@ -25,9 +25,9 @@ export default class Graph extends React.Component {
     axios.get(`https://exams.irish/data/getLocalData?lat=${position.coords.latitude}&lon=${position.coords.longitude}`)
       .then(res => {
         var data = res.data;
-        console.log(data)
+
         var areaData=[]
-         var locations=[]
+          var locations=[]
         for(var x=0;x<data.length;x++){
         var singlearea=[]
         for (var i=0; i<data[x].length-1; i++){
@@ -50,7 +50,8 @@ export default class Graph extends React.Component {
         for(const location in locations){
           finalArray[0].push(locations[location])
         }
-          for(var x=0;x<areaData.length;x++){
+
+        for(var x=0;x<areaData.length;x++){
           for (var i=0;i<areaData[x].length;i++){
             if(finalArray[i+1]!=null){
             finalArray[i+1].push(areaData[x][i][1])
@@ -63,24 +64,26 @@ export default class Graph extends React.Component {
               }
             }
           }
+        console.log(finalArray)
 
         areaData.locations=locations
         areaData.unshift(['Date','Cases per 100k'])
-        console.log(finalArray[finalArray.length-1][1])
         window.localStorage.setItem('locationRisk',Math.round((finalArray[finalArray.length-1][1]/200)*10)/10)
         console.log(window.localStorage.getItem('locationRisk'))
-        console.log(finalArray)
+        console.log(areaData)
+
         this.setState({ areaData:finalArray });
 
     });
     
     
 
-      })
-      }
+      })}
+               
+
     render() {
       const options = {
- title: `Cases In ${this.state.areaData.location}`,
+ title: `Cases Per 100k`,
    curveType: "function",
   legend: { position: "bottom" }
 };

@@ -20,8 +20,7 @@ counter=0
 sumLength=0
 sumTime=0
 
-for index in range(200):
-    print(index)
+for index in range(50):
     location1=getRandomLocation()
     location2=getRandomLocation()
     router=Router(location1, location2)
@@ -55,13 +54,12 @@ for index in range(200):
         covidDif=((average1-average2)/average1)*100
         timeDif=((travelTimeSafer-travelTimeFastest)/travelTimeFastest)*100
         lengthDif=((lengthSafer-lengthFastest)/lengthFastest)*100
-        if timeDif<30:
-            print('covidDif : ' + str(covidDif)+'    lengthDif : ' + str(lengthDif)+'    timeDif : ' + str(timeDif))
-            sumLength+=lengthDif
-            sumdecrease+=covidDif
-            sumTime+=timeDif
-            counter+=1
-        else:print('time diff too high')
+
+        print('covidDif : ' + str(covidDif)+'    lengthDif : ' + str(lengthDif)+'    timeDif : ' + str(timeDif))
+        sumLength+=lengthDif
+        sumdecrease+=covidDif
+        sumTime+=timeDif
+        counter+=1
     else: print('increase')
 averageDecrease=sumdecrease/counter
 averageLength=sumLength/counter
